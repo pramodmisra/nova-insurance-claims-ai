@@ -1,0 +1,7 @@
+strands-agents>=1.27.0
+strands-agents-tools>=0.2.21
+boto3>=1.42.0
+streamlit>=1.54.0
+faker>=33.0.0
+Pillow>=12.0.0
+python-dotenv>=1.0.0
