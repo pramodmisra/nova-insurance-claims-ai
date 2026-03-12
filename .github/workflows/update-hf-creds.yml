@@ -1,0 +1,55 @@
+name: Update HF Space Credentials
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws_access_key_id:
+        description: "AWS_ACCESS_KEY_ID (starts with ASIA...)"
+        required: true
+        type: string
+      aws_secret_access_key:
+        description: "AWS_SECRET_ACCESS_KEY"
+        required: true
+        type: string
+      aws_session_token:
+        description: "AWS_SESSION_TOKEN"
+        required: true
+        type: string
+      aws_region:
+        description: "AWS Region"
+        required: false
+        default: "us-east-1"
+        type: string
+
+jobs:
+  update-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push credentials to HF Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SPACE_ID: pramodmisra/nova-insurance-claims-ai
+        run: |
+          pip install -q huggingface_hub
+
+          python3 -c "
+          from huggingface_hub import HfApi
+          import os
+
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          space = os.environ['SPACE_ID']
+
+          secrets = {
+              'AWS_ACCESS_KEY_ID': '${{ inputs.aws_access_key_id }}',
+              'AWS_SECRET_ACCESS_KEY': '${{ inputs.aws_secret_access_key }}',
+              'AWS_SESSION_TOKEN': '${{ inputs.aws_session_token }}',
+              'AWS_DEFAULT_REGION': '${{ inputs.aws_region }}',
+          }
+
+          for key, value in secrets.items():
+              if value:
+                  api.add_space_secret(space, key, value)
+                  print(f'Updated {key}')
+
+          print('All secrets pushed to HF Space!')
+          "
