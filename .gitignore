@@ -5,3 +5,4 @@ __pycache__/
 reference-sample/
 .streamlit/secrets.toml
 scripts/.sso_cache.json
+scripts/*.log
