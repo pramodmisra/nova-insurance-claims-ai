@@ -4,3 +4,4 @@ __pycache__/
 .env
 reference-sample/
 .streamlit/secrets.toml
+scripts/.sso_cache.json
